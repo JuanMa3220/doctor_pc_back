@@ -25,7 +25,7 @@ module.exports = new EntitySchema({
     relations: {
         roles: {
             target: "Roles",
-            type: "one-to-many",
+            type: "many-to-one",
             cascade: true,
         }
     }

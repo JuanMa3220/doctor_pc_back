@@ -21,32 +21,53 @@ var dataSource = new typeorm.DataSource({
 
 // Se inicializa la BD y se crean los roles iniciales
 dataSource.initialize().then(function () {
-    var AdminRol = {
+    var adminRol = {
+        id: 1,
         name: "ADMIN",
     }
 
-    var TechRol = {
+    var techRol = {
+        id: 2,
         name: "TECH",
     }
 
-    var UserRol = {
+    var userRol = {
+        id: 3,
         name: "USER",
     }
 
     var roleRepository = dataSource.getRepository("Roles")
-    roleRepository.save(AdminRol);
-    roleRepository.save(TechRol);
-    roleRepository.save(UserRol);
+    roleRepository.save(adminRol);
+    roleRepository.save(techRol);
+    roleRepository.save(userRol);
+
+    var adminUser = {
+        id: 1,
+        name: "admin",
+        phone: "1234567890",
+        document: "1234",
+        password: "1234",
+        roles: 1
+    }
+
+    var userRepository = dataSource.getRepository("Users")
+
+    userRepository.save(adminUser)
+
     }).catch(function (error) {
         console.log("Error: ", error)
 });
+
+module.exports = dataSource
+
+// para poder parsear application/json
+app.use(express.json());
 
 // Rutas
 app.use(require('./routes.js'));
 
 //Configuraciones
 app.set('port', process.env.PORT || 3000);
-app.set('json spaces', 2)
 
 //Iniciando el servidor, escuchando...
 app.listen(app.get('port'),()=>{
