@@ -33,4 +33,18 @@ router.post('/login', async (req, res) => {
     res.json({"Error": "Usuario o contraseña incorrecto"});
 });
 
+router.post('/devices/register', (req, res) => {
+    let deviceRepository = dataSource.getRepository("Devices");
+    let newDevice = {
+        article: req.body.article,
+        brand: req.body.brand,
+        serial: req.body.serial,
+        diagnostic: req.body.diagnostic,
+        state: 0,
+        user: req.body.userId,
+    };
+    deviceRepository.save(newDevice);
+    res.json({"Exito": "El articulo ha sido creado exitosamente"});
+})
+
 module.exports = router;

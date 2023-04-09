@@ -9,21 +9,24 @@ module.exports = new EntitySchema({
             type: "int",
             generated: true,
         },
-        articulo: {
+        article: { // articulo
             type: "varchar",
         },
-        marca: {
+        brand: { // marca
             type: "varchar",
         },
         serial: {
             type: "varchar",
         },
-        diagnostico: {
+        diagnostic: {
             type: "varchar",
+        },
+        state: {    // si es 0:Recibido, 1:En revision, 2:Listo para entrega
+            type: "int",
         }
     },
     relations: {
-        users: {
+        user: {
             target: "Users",
             type: "many-to-one",
             cascade: true,
