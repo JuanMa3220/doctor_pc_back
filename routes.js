@@ -2,8 +2,7 @@ const { Router } = require('express');
 const router = Router();
 
 var dataSource = require("./server")
- 
-//Raiz
+
 router.post('/register', (req, res) => {
     let userRepository = dataSource.getRepository("Users");
     let newUser = {
@@ -33,6 +32,24 @@ router.post('/login', async (req, res) => {
     res.json({"Error": "Usuario o contraseña incorrecto"});
 });
 
+router.get('/devices/all', async (req, res) => {
+    let deviceRepository = dataSource.getRepository("Devices");
+    let devices = await deviceRepository.find();
+    res.json(devices);
+})
+
+router.get('/device/:id', async (req, res) => {
+    let deviceRepository = dataSource.getRepository("Devices");
+    let deviceId = req.params.id;
+    let device = await deviceRepository.findOneBy({
+        id: deviceId
+    });
+    res.json(device);
+})
+
+/**
+ * Servicio para crear dispositivos nuevos y almacenarlos en la base de datos bien chido :P
+ */
 router.post('/devices/register', (req, res) => {
     let deviceRepository = dataSource.getRepository("Devices");
     let newDevice = {
