@@ -50,7 +50,7 @@ router.get('/device/:id', async (req, res) => {
 /**
  * Servicio para crear dispositivos nuevos y almacenarlos en la base de datos bien chido :P
  */
-router.post('/devices/register', (req, res) => {
+router.post('/device/register', (req, res) => {
     let deviceRepository = dataSource.getRepository("Devices");
     let newDevice = {
         article: req.body.article,
@@ -62,6 +62,29 @@ router.post('/devices/register', (req, res) => {
     };
     deviceRepository.save(newDevice);
     res.json({"Exito": "El articulo ha sido creado exitosamente"});
+})
+
+router.post('/device/edit/:id', async (req, res) => {
+    let deviceRepository = dataSource.getRepository("Devices");
+    let deviceId = req.params.id;
+    let dbDevice = await deviceRepository.findOneBy({
+        id: deviceId
+    });
+
+    if (dbDevice === null) {
+        return res.json({'Error': 'El dispositivo que se desea editar no existe'})
+    }
+
+    dbDevice.article = req.body.article;
+    dbDevice.brand = req.body.brand;
+    dbDevice.serial = req.body.serial;
+    dbDevice.diagnostic = req.body.diagnostic;
+    dbDevice.state = req.body.state;
+    dbDevice.userId = req.body.userId;
+
+    deviceRepository.save(dbDevice);
+
+    res.json({"Exito": "El articulo ha sido modificado exitosamente", 'Device': dbDevice});
 })
 
 module.exports = router;
