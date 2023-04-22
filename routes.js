@@ -87,4 +87,21 @@ router.post('/device/edit/:id', async (req, res) => {
     res.json({"Exito": "El articulo ha sido modificado exitosamente", 'Device': dbDevice});
 })
 
+router.post('/device/delete/:id', async (req, res) => {
+    let deviceRepository = dataSource.getRepository("Devices");
+    let deviceId = req.params.id;
+    let dbDevice = await deviceRepository.findOneBy({
+        id: deviceId
+    });
+
+    if (dbDevice === null) {
+        return res.json({'Error': 'El dispositivo que se desea eliminar no existe'})
+    }
+
+    deviceRepository.delete({
+        id: deviceId
+    });
+    res.json({"Exito": "El articulo ha sido eliminado exitosamente"});
+})
+
 module.exports = router;
