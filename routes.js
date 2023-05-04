@@ -3,7 +3,7 @@ const router = Router();
 
 var dataSource = require("./server")
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     let userRepository = dataSource.getRepository("Users");
     let newUser = {
         name: req.body.name,
@@ -12,8 +12,12 @@ router.post('/register', (req, res) => {
         password: req.body.password,
         roles: 3
     };
+    let dbUser = await userRepository.findOneBy({document: req.body.document});
+    if (dbUser) {
+        return res.json({"Yuka!": "El usuario ya existe en la base"});
+    }
     userRepository.save(newUser);
-    res.json({"Exito": "El usuario ha sido creado exitosamente"});
+    return res.json({"Exito": "El usuario ha sido creado exitosamente"});
 })
 
 router.post('/login', async (req, res) => {    
@@ -28,7 +32,7 @@ router.post('/login', async (req, res) => {
         password: user.password
     });
 
-    if (dbUser) return res.json({"Exito": "El usuario ha sido autenticado"});
+    if (dbUser) return res.json(true);
     res.json({"Error": "Usuario o contraseña incorrecto"});
 });
 

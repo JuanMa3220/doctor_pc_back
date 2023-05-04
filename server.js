@@ -1,6 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const typeorm = require('typeorm');
 const app = express();
+
+const cors = require('cors');
+app.use( cors ({ origin: '*' }));
 
 // Base de datos
 var dataSource = new typeorm.DataSource({
