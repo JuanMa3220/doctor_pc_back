@@ -58,6 +58,17 @@ dataSource.initialize().then(function () {
 
     userRepository.save(adminUser)
 
+    var defaultUser = {
+        id: 2,
+        name: "Franco Ortiz",
+        phone: "1234567890",
+        document: "12345",
+        password: "12345",
+        roles: 3
+    }
+
+    userRepository.save(defaultUser)
+
     }).catch(function (error) {
         console.log("Error: ", error)
 });
