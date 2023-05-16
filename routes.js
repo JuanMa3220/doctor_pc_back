@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
     };
     let dbUser = await userRepository.findOneBy({document: req.body.document});
     if (dbUser) {
-        return res.json({"Yuka!": "El usuario ya existe en la base"});
+        return res.json({"Error!": "El usuario ya existe en la base"});
     }
     userRepository.save(newUser);
     return res.json({"Exito": "El usuario ha sido creado exitosamente"});
@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
     });
 
     if (dbUser) return res.json(true);
-    res.json({"Error": "Usuario o contraseña incorrecto"});
+    res.json({"Error!": "Usuario o contraseña incorrecto"});
 });
 
 router.get('/devices/all', async (req, res) => {
@@ -52,7 +52,7 @@ router.get('/device/:id', async (req, res) => {
 })
 
 /**
- * Servicio para crear dispositivos nuevos y almacenarlos en la base de datos bien chido :P
+ * Servicio para crear dispositivos nuevos y almacenarlos en la base de datos
  */
 router.post('/device/register', (req, res) => {
     let deviceRepository = dataSource.getRepository("Devices");
@@ -106,6 +106,38 @@ router.post('/device/delete/:id', async (req, res) => {
         id: deviceId
     });
     res.json({"Exito": "El articulo ha sido eliminado exitosamente"});
+})
+
+router.get('/boucher/all', async (req, res) => {
+    let boucherRepository = dataSource.getRepository("Bouchers");
+    let bouchers = await boucherRepository.find();
+    res.json(bouchers);
+})
+
+router.get('/boucher/:id', async (req, res) => {
+    let boucherRepository = dataSource.getRepository("Bouchers");
+    let boucherId = req.params.id;
+    let boucher = await boucherRepository.findOneBy({
+        id: boucherId
+    });
+    res.json(boucher);
+})
+
+/**
+ * Servicio para crear facturas nuevas y almacenarlas en la base de datos
+ */
+router.post('/boucher/register', (req, res) => {
+    let boucherRepository = dataSource.getRepository("Bouchers");
+    let newBoucher = {
+        checkin: req.body.checkin,
+        checkout: req.body.checkout,
+        total: req.body.total,
+        state: req.body.state,
+        description: req.body.description,
+        users: req.body.userId,
+    };
+    boucherRepository.save(newBoucher);
+    res.json({"Exito": "La Factura ha sido creada exitosamente"});
 })
 
 module.exports = router;
