@@ -140,4 +140,44 @@ router.post('/boucher/register', (req, res) => {
     res.json({"Exito": "La Factura ha sido creada exitosamente"});
 })
 
+router.post('/boucher/edit/:id', async (req, res) => {
+    let boucherRepository = dataSource.getRepository("Bouchers");
+    let boucherId = req.params.id;
+    let dbBoucher = await boucherRepository.findOneBy({
+        id: boucherId
+    });
+
+    if (dbBoucher === null) {
+        return res.json({'Error': 'La Factura que se desea editar no existe'})
+    }
+
+    dbBoucher.checkin = req.body.checkin;
+    dbBoucher.checkout = req.body.checkout;
+    dbBoucher.total = req.body.total;
+    dbBoucher.state = req.body.state;
+    dbBoucher.description = req.body.description;
+    dbBoucher.userId = req.body.userId;
+
+    boucherRepository.save(dbBoucher);
+
+    res.json({"Exito": "La Factura ha sido modificada exitosamente", 'Boucher': dbBoucher});
+})
+
+router.post('/boucher/delete/:id', async (req, res) => {
+    let boucherRepository = dataSource.getRepository("Bouchers");
+    let boucherId = req.params.id;
+    let dbBoucher = await boucherRepository.findOneBy({
+        id: boucherId
+    });
+
+    if (dbBoucher === null) {
+        return res.json({'Error': 'La Factura que se desea eliminar no existe'})
+    }
+
+    boucherRepository.delete({
+        id: boucherId
+    });
+    res.json({"Exito": "La Factura ha sido eliminada exitosamente"});
+})
+
 module.exports = router;
